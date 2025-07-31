@@ -4,15 +4,15 @@ const express = require("express");
 const { connectDB } = require("./lib/connectDB");
 const app = express();
 const PORT = process.env.PORT || 3000;
+const authRouter = require("./routes/auth.route");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-app.get("/api/data", (req, res) => {
-  res.send("Data received!"); 
-});
+
+app.use("/api/auth", authRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  connectDB()
+  connectDB();
 });
