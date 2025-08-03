@@ -6,9 +6,9 @@ exports.generateToken = (userId, res) => {
   });
   res.cookie("jwt", token, {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    secure: process.env.NODE_ENV !== "development", // Use secure cookies in production
+    secure: process.env.NODE_ENV !== "development", // true in prod over HTTPS
     httpOnly: true,
-    sameSite: "strict", // Helps prevent CSRF attacks
+    sameSite: "strict", // okay for most cases; if you need cross-site redirects/logins consider "lax"
   });
   return token;
 };

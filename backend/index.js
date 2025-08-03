@@ -5,9 +5,12 @@ const { connectDB } = require("./lib/connectDB");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const authRouter = require("./routes/auth.route");
+const cookieParser = require("cookie-parser");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
