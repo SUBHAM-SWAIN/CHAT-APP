@@ -1,42 +1,51 @@
 import React, { useState } from "react";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  UserIcon,
+  EnvelopeIcon,
+  LockClosedIcon,
+} from "@heroicons/react/24/outline";
 
-export default function Signup() {
+export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="min-h-[calc(100vh-60px)] flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white px-4 pt-[60px]">
-      <div className="bg-gray-900 rounded-2xl shadow-lg p-8 w-full max-w-5xl flex flex-col md:flex-row">
+    <div className="h-[calc(100vh-60px)] flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white px-4 overflow-hidden">
+      <div className="bg-gray-900 rounded-2xl shadow-lg w-full max-w-5xl flex flex-col md:flex-row p-4 sm:p-8 overflow-hidden">
         
         {/* Left Form Section */}
-        <div className="flex-1 md:pr-6">
+        <div className="flex-1 md:pr-6 flex flex-col justify-center">
           <h2 className="text-2xl font-bold mb-1">Create Account</h2>
           <p className="text-gray-400 mb-6">Get started with your free account</p>
 
           {/* Full Name */}
-          <div className="mb-4">
+          <div className="mb-4 relative">
+            <UserIcon className="w-5 h-5 text-sky-400 absolute left-3 top-3.5" />
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-sky-400"
+              className="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-sky-400"
             />
           </div>
 
           {/* Email */}
-          <div className="mb-4">
+          <div className="mb-4 relative">
+            <EnvelopeIcon className="w-5 h-5 text-sky-400 absolute left-3 top-3.5" />
             <input
               type="email"
               placeholder="Email"
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-sky-400"
+              className="w-full pl-10 pr-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-sky-400"
             />
           </div>
 
-          {/* Password with Eye Icon */}
+          {/* Password */}
           <div className="mb-6 relative">
+            <LockClosedIcon className="w-5 h-5 text-sky-400 absolute left-3 top-3.5" />
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-sky-400 pr-10"
+              className="w-full pl-10 pr-10 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-sky-400"
             />
             <button
               type="button"
@@ -51,12 +60,12 @@ export default function Signup() {
             </button>
           </div>
 
-          {/* Create Account Button */}
+          {/* Button */}
           <button className="w-full bg-sky-400 hover:bg-sky-500 text-black font-semibold py-3 rounded-lg">
             Create Account
           </button>
 
-          {/* Sign In Link */}
+          {/* Sign In */}
           <p className="mt-4 text-center text-gray-400">
             Already have an account?{" "}
             <a href="/login" className="text-sky-400 hover:underline">
@@ -65,9 +74,9 @@ export default function Signup() {
           </p>
         </div>
 
-        {/* Right Section (Hidden only on small screens) */}
-        <div className="flex-1 hidden sm:flex flex-col items-center justify-center text-center p-6">
-          <div className="grid grid-cols-3 gap-3 mb-4 max-w-[200px] md:max-w-[250px]">
+        {/* Right Section */}
+        <div className="flex-1 hidden sm:flex flex-col items-center justify-center text-center p-4">
+          <div className="grid grid-cols-3 gap-3 mb-4 max-w-[180px] md:max-w-[250px]">
             {Array(9)
               .fill("")
               .map((_, i) => (
@@ -81,8 +90,7 @@ export default function Signup() {
             Join our community
           </h3>
           <p className="text-gray-400 mt-2 text-sm max-w-xs">
-            Connect with friends, share moments, and stay in touch with your
-            loved ones.
+            Connect with friends, share moments, and stay in touch with your loved ones.
           </p>
         </div>
       </div>

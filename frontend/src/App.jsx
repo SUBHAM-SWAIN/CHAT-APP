@@ -8,6 +8,7 @@ import ProfilePage from "./pages/profilePage";
 import Navbar from "./components/Navbar";
 import { useAuthStore } from "./store/useAuthStore.js";
 import LoadingPreview from "./components/Loader.jsx";
+
 function App() {
   const { checkAuth, authUser, isCheckingAuth } = useAuthStore();
 
@@ -15,31 +16,33 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  console.log("Auth User:", { authUser });
-
   if (isCheckingAuth && !authUser) {
     return <LoadingPreview />;
   }
 
   return (
-    <div>
-      <Navbar />
+    <div className="min-h-screen flex flex-col overflow-x-hidden">
+      {/* Navbar fixed at top */}
+      <div className="fixed top-0 left-0 right-0 h-[60px] z-50">
+        <Navbar />
+      </div>
 
-      <Routes>
-        <Route
-          path="/"
-          element={authUser ? <Home /> : <Navigate to={"/login"}></Navigate>}
-        />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/setting" element={<SetingPage />} />
-        <Route
-          path="/profile"
-          element={
-            authUser ? <ProfilePage /> : <Navigate to={"/login"}></Navigate>
-          }
-        />
-      </Routes>
+      {/* Pages content below navbar */}
+      <main className="flex-1 mt-[60px] h-[calc(100vh-60px)] overflow-hidden">
+        <Routes>
+          <Route
+            path="/"
+            element={authUser ? <Home /> : <Navigate to={"/login"} />}
+          />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/setting" element={<SetingPage />} />
+          <Route
+            path="/profile"
+            element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />}
+          />
+        </Routes>
+      </main>
     </div>
   );
 }
