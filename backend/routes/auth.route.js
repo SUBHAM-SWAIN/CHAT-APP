@@ -5,6 +5,7 @@ const {
   register,
   logout,
   updateProfile,
+  checkAuth,
 } = require("../controllers/auth.controller");
 const { protectRoutes } = require("../middlewares/auth.middleware");
 
@@ -13,5 +14,6 @@ authRouter.get("/login", login);
 authRouter.post("/logout", logout);
 
 authRouter.put("/update-profile", protectRoutes, updateProfile);
+authRouter.get("/check", protectRoutes, checkAuth);
 
 module.exports = authRouter;

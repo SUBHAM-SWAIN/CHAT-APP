@@ -6,6 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const authRouter = require("./routes/auth.route");
 const cookieParser = require("cookie-parser");
+const messageRoute = require("./routes/message.route");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/message", messageRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
