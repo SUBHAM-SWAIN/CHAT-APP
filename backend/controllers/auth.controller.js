@@ -7,7 +7,6 @@ const cloudinary = require("../lib/cloudinary"); // your preconfigured module wi
 exports.register = async (req, res) => {
   try {
     let { fullName, email, password } = req.body;
-    console.log(req.body);
 
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });

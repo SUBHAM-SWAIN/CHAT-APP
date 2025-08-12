@@ -10,7 +10,7 @@ const {
 const { protectRoutes } = require("../middlewares/auth.middleware");
 
 authRouter.post("/register", register);
-authRouter.get("/login", login);
+authRouter.post("/login", login);
 authRouter.post("/logout", logout);
 
 authRouter.put("/update-profile", protectRoutes, updateProfile);

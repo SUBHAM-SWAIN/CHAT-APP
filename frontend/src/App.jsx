@@ -20,7 +20,6 @@ function App() {
   if (isCheckingAuth && !authUser) {
     return <LoadingPreview />;
   }
-  console.log("Auth"+authUser);
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
@@ -37,7 +36,7 @@ function App() {
             element={authUser ? <Home /> : <Navigate to={"/login"} />}
           />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/login" element={ <LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/setting" element={<SetingPage />} />
           <Route
             path="/profile"
