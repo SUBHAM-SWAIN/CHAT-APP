@@ -1,8 +1,8 @@
-// auth.controller.js
+// backend/controllers/auth.controller.js
 const { generateToken } = require("../lib/utils");
 const User = require("../models/user.model");
 const bcrypt = require("bcryptjs");
-const cloudinary = require("../lib/cloudinary"); // your preconfigured module with dotenv loaded
+const cloudinary = require("../lib/cloudinary"); // configured with dotenv
 
 exports.register = async (req, res) => {
   try {
@@ -36,9 +36,10 @@ exports.register = async (req, res) => {
 
     await newUser.save();
 
-    // generate token (assumes generateToken sets a cookie or returns token)
+    // generate token (assumes generateToken sets cookie)
     generateToken(newUser._id, res);
 
+    // Send user object in a consistent shape (no password)
     return res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -46,6 +47,7 @@ exports.register = async (req, res) => {
         fullName: newUser.fullName,
         email: newUser.email,
         profile: newUser.profile || "",
+        createdAt: newUser.createdAt,
       },
     });
   } catch (error) {
@@ -97,7 +99,7 @@ exports.logout = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    console.log(req.body);
+    // expecting { profile: <base64 string> } in body
     const { profile } = req.body;
     const userId = req.user._id;
 
@@ -105,6 +107,7 @@ exports.updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Profile picture is required" });
     }
 
+    // Upload base64 to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(profile);
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -117,6 +120,7 @@ exports.updateProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // return updated user (without password)
     return res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Update profile error:", error);
@@ -126,6 +130,7 @@ exports.updateProfile = async (req, res) => {
 
 exports.checkAuth = (req, res) => {
   try {
+    // Expect protectRoutes middleware to attach req.user (without password)
     return res.status(200).json(req.user);
   } catch (error) {
     console.log(error);
