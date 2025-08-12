@@ -1,2 +1,72 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+/* themes.css */
+
+[data-theme="light"] {
+  --color-bg: #ffffff; /* white */
+  --color-text: #1f2937; /* gray-800 */
+  --color-primary: #3b82f6; /* blue-500 */
+  --color-secondary: #2563eb; /* blue-600 */
+  --color-hover: #1d4ed8; /* blue-700 */
+  --color-border: #e5e7eb; /* gray-200 */
+  --color-error: #ef4444; /* red-500 */
+}
+
+[data-theme="dark"] {
+  --color-bg: #0f172a; /* slate-900 */
+  --color-text: #f1f5f9; /* slate-100 */
+  --color-primary: #60a5fa; /* blue-400 */
+  --color-secondary: #3b82f6; /* blue-500 */
+  --color-hover: #2563eb; /* blue-700 */
+  --color-border: #334155; /* slate-700 */
+  --color-error: #ef4444; /* red-500 */
+}
+
+[data-theme="blue"] {
+  --color-bg: #1e40af; /* blue-900 */
+  --color-text: #bfdbfe; /* blue-200 */
+  --color-primary: #93c5fd; /* blue-300 */
+  --color-secondary: #60a5fa; /* blue-400 */
+  --color-hover: #3b82f6; /* blue-500 */
+  --color-border: #1e3a8a; /* blue-800 */
+  --color-error: #f87171; /* red-400 */
+}
+
+[data-theme="green"] {
+  --color-bg: #064e3b; /* emerald-900 */
+  --color-text: #d1fae5; /* emerald-100 */
+  --color-primary: #34d399; /* emerald-400 */
+  --color-secondary: #10b981; /* emerald-600 */
+  --color-hover: #059669; /* emerald-700 */
+  --color-border: #065f46; /* emerald-800 */
+  --color-error: #dc2626; /* red-600 */
+}
+
+[data-theme="red"] {
+  --color-bg: #7f1d1d; /* red-900 */
+  --color-text: #fee2e2; /* red-200 */
+  --color-primary: #f87171; /* red-400 */
+  --color-secondary: #ef4444; /* red-500 */
+  --color-hover: #dc2626; /* red-600 */
+  --color-border: #991b1b; /* red-800 */
+  --color-error: #b91c1c; /* red-700 */
+}
+
+[data-theme="purple"] {
+  --color-bg: #4c1d95; /* purple-900 */
+  --color-text: #ddd6fe; /* purple-200 */
+  --color-primary: #a78bfa; /* purple-400 */
+  --color-secondary: #8b5cf6; /* purple-500 */
+  --color-hover: #7c3aed; /* purple-600 */
+  --color-border: #5b21b6; /* purple-700 */
+  --color-error: #c084fc; /* purple-300 */
+}
+
+/* Example global styles that use these variables */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+

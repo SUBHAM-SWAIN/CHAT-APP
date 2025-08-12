@@ -11,19 +11,40 @@ import { useAuthStore } from "./store/useAuthStore.js";
 import LoadingPreview from "./components/Loader.jsx";
 import { Toaster } from "react-hot-toast";
 
+// Import your zustand theme store and CSS
+import { useThemeStore } from "./store/useThemeStore";
+
 function App() {
   const { checkAuth, authUser, isCheckingAuth } = useAuthStore();
 
+  // Theme state from zustand
+  const theme = useThemeStore((state) => state.theme);
+  const setTheme = useThemeStore((state) => state.setTheme);
+
   useEffect(() => {
     checkAuth();
-  }, []); // calling once on app mount is fine
+  }, []);
+
+  // On app mount, set theme from localStorage or fallback "light"
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    setTheme(savedTheme);
+  }, [setTheme]);
 
   if (isCheckingAuth && !authUser) {
     return <LoadingPreview />;
   }
 
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden">
+    <div
+      className="min-h-screen flex flex-col overflow-x-hidden"
+      style={{
+        backgroundColor: "var(--color-bg)",
+        color: "var(--color-text)",
+        transition: "background-color 0.3s ease, color 0.3s ease",
+      }}
+    >
       <div className="fixed top-0 left-0 right-0 h-[60px] z-50">
         <Navbar />
       </div>
@@ -48,9 +69,13 @@ function App() {
         position="top-center"
         toastOptions={{
           style: {
-            background: "#1f2937",
-            color: "#fff",
+            background: "var(--color-bg)",
+            color: "var(--color-text)",
             borderRadius: "8px",
+            boxShadow:
+              theme === "dark"
+                ? "0 0 10px rgba(255,255,255,0.1)"
+                : "0 0 10px rgba(0,0,0,0.1)",
           },
         }}
       />
