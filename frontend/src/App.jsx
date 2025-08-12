@@ -8,6 +8,7 @@ import ProfilePage from "./pages/profilePage";
 import Navbar from "./components/Navbar";
 import { useAuthStore } from "./store/useAuthStore.js";
 import LoadingPreview from "./components/Loader.jsx";
+import { Toaster } from "react-hot-toast"; // ✅ fixed import
 
 function App() {
   const { checkAuth, authUser, isCheckingAuth } = useAuthStore();
@@ -19,6 +20,7 @@ function App() {
   if (isCheckingAuth && !authUser) {
     return <LoadingPreview />;
   }
+  console.log("Auth"+authUser);
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
@@ -35,7 +37,7 @@ function App() {
             element={authUser ? <Home /> : <Navigate to={"/login"} />}
           />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={ <LoginPage />} />
           <Route path="/setting" element={<SetingPage />} />
           <Route
             path="/profile"
@@ -43,6 +45,18 @@ function App() {
           />
         </Routes>
       </main>
+
+      {/* Toast Notifications */}
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: "#1f2937", // Tailwind gray-800
+            color: "#fff",
+            borderRadius: "8px",
+          },
+        }}
+      />
     </div>
   );
 }
