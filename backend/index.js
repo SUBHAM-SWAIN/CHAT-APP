@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
 const { connectDB } = require("./lib/connectDB");
-const app = express();
+const {app, server} = require("./lib/socket");
 const PORT = process.env.PORT || 3000;
 const authRouter = require("./routes/auth.route");
 const cookieParser = require("cookie-parser");
@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRoute);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
