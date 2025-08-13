@@ -7,7 +7,7 @@ const {
 } = require("../controllers/message.controller");
 const messageRoute = express.Router();
 
-messageRoute.get("/usres", protectRoutes, getUsersForSideBar);
+messageRoute.get("/users", protectRoutes, getUsersForSideBar);
 messageRoute.get("/:id", protectRoutes, getMessages);
 messageRoute.post("/send/:id", protectRoutes, sendMessage);
 
