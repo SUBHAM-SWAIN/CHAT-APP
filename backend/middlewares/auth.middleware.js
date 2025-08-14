@@ -1,8 +1,8 @@
 // auth.middleware.js
-const jwt = require("jsonwebtoken");
-const User = require("../models/user.model");
+import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
-exports.protectRoutes = async (req, res, next) => {
+export const protectRoutes = async (req, res, next) => {
   try {
     const token = req.cookies?.jwt;
     if (!token) {
@@ -16,7 +16,6 @@ exports.protectRoutes = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized: Invalid or expired token" });
     }
 
-    // adjust depending on how you signed it. e.g., jwt.sign({ id: userId }, ...)
     const userId = decoded.id ?? decoded.userId;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized: Malformed token payload" });

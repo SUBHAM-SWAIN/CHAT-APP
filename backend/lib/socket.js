@@ -1,7 +1,6 @@
-// lib/socket.js
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
 
 const app = express();
 const server = http.createServer(app);
@@ -16,7 +15,7 @@ const io = new Server(server, {
 // Store online users: { userId: socketId }
 const userSocketMap = {};
 
-function getReceiverSocketId(userId) {
+export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
 
@@ -35,15 +34,12 @@ io.on("connection", (socket) => {
     socket.join(chatId);
   });
 
-  // These two are optional helpers if you want to trigger from client directly.
-  // Your API already emits server-side after DB updates.
+  // Optional client-side triggers for edits/deletes
   socket.on("editMessage", (updatedMessage) => {
-    // if using rooms: io.to(updatedMessage.chatId).emit("messageEdited", updatedMessage);
     io.emit("messageEdited", updatedMessage);
   });
 
-  socket.on("deleteMessage", (messageId, chatId) => {
-    // if using rooms: io.to(chatId).emit("messageDeleted", messageId);
+  socket.on("deleteMessage", (messageId) => {
     io.emit("messageDeleted", messageId);
   });
 
@@ -54,4 +50,4 @@ io.on("connection", (socket) => {
   });
 });
 
-module.exports = { app, server, io, getReceiverSocketId };
+export { app, server, io };

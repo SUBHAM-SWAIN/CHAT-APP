@@ -1,10 +1,11 @@
-const Message = require("../models/message.model");
-const User = require("../models/user.model");
-const cloudinary = require("../lib/cloudinary");
-const { getReceiverSocketId, io } = require("../lib/socket.js");
+// backend/controllers/message.controller.js
+import Message from "../models/message.model.js";
+import User from "../models/user.model.js";
+import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 // Get users for sidebar
-exports.getUsersForSideBar = async (req, res) => {
+export const getUsersForSideBar = async (req, res) => {
   try {
     const id = req.user._id;
     const filteredUser = await User.find({ _id: { $ne: id } }).select("-password");
@@ -16,7 +17,7 @@ exports.getUsersForSideBar = async (req, res) => {
 };
 
 // Get all messages between two users
-exports.getMessages = async (req, res) => {
+export const getMessages = async (req, res) => {
   try {
     const myId = req.user._id;
     const userToChatId = req.params.id;
@@ -36,7 +37,7 @@ exports.getMessages = async (req, res) => {
 };
 
 // Send new message
-exports.sendMessage = async (req, res) => {
+export const sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
     const receiverId = req.params.id;
@@ -71,7 +72,7 @@ exports.sendMessage = async (req, res) => {
 };
 
 // Edit existing message
-exports.editMessage = async (req, res) => {
+export const editMessage = async (req, res) => {
   try {
     const { messageId } = req.params;
     const { newText, image } = req.body;
@@ -106,7 +107,7 @@ exports.editMessage = async (req, res) => {
 };
 
 // Delete message
-exports.deleteMessage = async (req, res) => {
+export const deleteMessage = async (req, res) => {
   try {
     const { messageId } = req.params;
 

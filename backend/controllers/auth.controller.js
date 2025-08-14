@@ -1,10 +1,10 @@
 // backend/controllers/auth.controller.js
-const { generateToken } = require("../lib/utils");
-const User = require("../models/user.model");
-const bcrypt = require("bcryptjs");
-const cloudinary = require("../lib/cloudinary"); // configured with dotenv
+import { generateToken } from "../lib/utils.js";
+import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
+import cloudinary from "../lib/cloudinary.js"; // configured with dotenv
 
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   try {
     let { fullName, email, password } = req.body;
 
@@ -36,10 +36,8 @@ exports.register = async (req, res) => {
 
     await newUser.save();
 
-    // generate token (assumes generateToken sets cookie)
     generateToken(newUser._id, res);
 
-    // Send user object in a consistent shape (no password)
     return res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -56,7 +54,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -77,7 +75,6 @@ exports.login = async (req, res) => {
 
     generateToken(user._id, res);
 
-    // omit password before sending
     const { password: _, ...userSafe } = user.toObject();
 
     return res.status(200).json(userSafe);
@@ -87,7 +84,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.logout = async (req, res) => {
+export const logout = async (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0, httpOnly: true });
     return res.status(200).json({ message: "Logged out successfully" });
@@ -97,9 +94,8 @@ exports.logout = async (req, res) => {
   }
 };
 
-exports.updateProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
   try {
-    // expecting { profile: <base64 string> } in body
     const { profile } = req.body;
     const userId = req.user._id;
 
@@ -107,7 +103,6 @@ exports.updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Profile picture is required" });
     }
 
-    // Upload base64 to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(profile);
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -120,7 +115,6 @@ exports.updateProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // return updated user (without password)
     return res.status(200).json(updatedUser);
   } catch (error) {
     console.error("Update profile error:", error);
@@ -128,9 +122,8 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-exports.checkAuth = (req, res) => {
+export const checkAuth = (req, res) => {
   try {
-    // Expect protectRoutes middleware to attach req.user (without password)
     return res.status(200).json(req.user);
   } catch (error) {
     console.log(error);
