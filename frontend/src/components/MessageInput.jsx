@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
-import { Image, Send, X } from "lucide-react";
+import { Image, Send, X, Check } from "lucide-react";
 import toast from "react-hot-toast";
 import React from "react";
 
@@ -8,19 +8,25 @@ const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage } = useChatStore();
+
+  const { sendMessage, editingMessage, updateMessage, setEditingMessage } =
+    useChatStore();
+
+  useEffect(() => {
+    if (editingMessage) {
+      setText(editingMessage.text || "");
+      setImagePreview(editingMessage.image || null);
+    }
+  }, [editingMessage]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file.type.startsWith("image/")) {
+    if (!file || !file.type.startsWith("image/")) {
       toast.error("Please select an image file");
       return;
     }
-
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+    reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
   };
 
@@ -32,19 +38,21 @@ const MessageInput = () => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
-
     try {
-      await sendMessage({
-        text: text.trim(),
-        image: imagePreview,
-      });
-
-      // Clear form
+      if (editingMessage) {
+        await updateMessage(editingMessage._id, {
+          text: text.trim(),
+          image: imagePreview,
+        });
+      } else {
+        await sendMessage({ text: text.trim(), image: imagePreview });
+      }
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
+      setEditingMessage(null);
     } catch (error) {
-      console.error("Failed to send message:", error);
+      console.error(error);
     }
   };
 
@@ -56,15 +64,14 @@ const MessageInput = () => {
             <img
               src={imagePreview}
               alt="Preview"
-              className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
+              className="w-20 h-20 object-cover rounded-lg border"
             />
             <button
               onClick={removeImage}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300
-              flex items-center justify-center"
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gray-300 flex items-center justify-center"
               type="button"
             >
-              <X className="size-3" />
+              <X size={12} />
             </button>
           </div>
         </div>
@@ -75,7 +82,9 @@ const MessageInput = () => {
           <input
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
-            placeholder="Type a message..."
+            placeholder={
+              editingMessage ? "Edit your message..." : "Type a message..."
+            }
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
@@ -86,25 +95,27 @@ const MessageInput = () => {
             ref={fileInputRef}
             onChange={handleImageChange}
           />
-
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle
-                     ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+            className={`hidden sm:flex btn btn-circle ${
+              imagePreview ? "text-emerald-500" : "text-gray-400"
+            }`}
             onClick={() => fileInputRef.current?.click()}
           >
             <Image size={20} />
           </button>
         </div>
+
         <button
           type="submit"
           className="btn btn-sm btn-circle"
           disabled={!text.trim() && !imagePreview}
         >
-          <Send size={22} />
+          {editingMessage ? <Check size={22} /> : <Send size={22} />}
         </button>
       </form>
     </div>
   );
 };
+
 export default MessageInput;

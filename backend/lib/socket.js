@@ -1,6 +1,7 @@
-import { Server } from "socket.io";
-import http from "http";
-import express from "express";
+// lib/socket.js
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
@@ -8,30 +9,49 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173"],
+    credentials: true,
   },
 });
 
-export function getReceiverSocketId(userId) {
+// Store online users: { userId: socketId }
+const userSocketMap = {};
+
+function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
 
-// used to store online users
-const userSocketMap = {}; // {userId: socketId}
-
 io.on("connection", (socket) => {
-  console.log("A user connected", socket.id);
+  console.log("A user connected:", socket.id);
 
+  // Expect ?userId=... in client handshake query
   const userId = socket.handshake.query.userId;
   if (userId) userSocketMap[userId] = socket.id;
 
-  // io.emit() is used to send events to all the connected clients
+  // Broadcast fresh online users list
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
+  // Optional: rooms if you use them elsewhere
+  socket.on("joinChat", (chatId) => {
+    socket.join(chatId);
+  });
+
+  // These two are optional helpers if you want to trigger from client directly.
+  // Your API already emits server-side after DB updates.
+  socket.on("editMessage", (updatedMessage) => {
+    // if using rooms: io.to(updatedMessage.chatId).emit("messageEdited", updatedMessage);
+    io.emit("messageEdited", updatedMessage);
+  });
+
+  socket.on("deleteMessage", (messageId, chatId) => {
+    // if using rooms: io.to(chatId).emit("messageDeleted", messageId);
+    io.emit("messageDeleted", messageId);
+  });
+
   socket.on("disconnect", () => {
-    console.log("A user disconnected", socket.id);
-    delete userSocketMap[userId];
+    console.log("A user disconnected:", socket.id);
+    if (userId) delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
 
-export { io, app, server };
+module.exports = { app, server, io, getReceiverSocketId };

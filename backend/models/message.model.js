@@ -1,3 +1,4 @@
+// models/message.model.js
 const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema(
@@ -14,14 +15,21 @@ const messageSchema = new mongoose.Schema(
     },
     text: {
       type: String,
-    }, 
+    },
     image: {
       type: String,
+    },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
+    // Keeping this in case you later switch to soft delete:
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
 );
 
-const Message = mongoose.model("Message", messageSchema);
-
-module.exports = Message;
+module.exports = mongoose.model("Message", messageSchema);
