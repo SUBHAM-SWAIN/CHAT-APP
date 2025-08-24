@@ -7,9 +7,9 @@ export const generateToken = (userId, res) => {
 
   res.cookie("jwt", token, {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    secure: process.env.NODE_ENV !== "development", // true in prod over HTTPS
+    secure: process.env.NODE_ENV === "production", // ✅ only true in prod
     httpOnly: true,
-    sameSite: "strict", // Use "lax" if you need cross-site redirects/logins
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // ✅ cross-site allowed
   });
 
   return token;
