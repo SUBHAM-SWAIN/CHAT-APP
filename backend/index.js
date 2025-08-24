@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin:["http://localhost:5173", "https://chat-app-xi-neon.vercel.app"],
     credentials: true,
   })
 );
